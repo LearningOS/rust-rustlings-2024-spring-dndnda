@@ -71,12 +71,36 @@ impl<T> LinkedList<T> {
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
 	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+		let mut res: LinkedList<T>;
+        let mut a: Option<NonNull<Node<T>>> = list_a.start;
+        let mut b = list_b.start;
+
+        while a != None && b != None {
+            let val_a = (*a.unwrap().as_ptr()).val;
+            let val_b = (*b.unwrap().as_ptr()).val;
+            if val_a < val_b {
+                res.add(val_a);
+                a = (*a.unwrap().as_ptr()).next;
+            }
+            else {
+                res.add(val_b);
+                b = (*b.unwrap().as_ptr()).next; 
+            }
         }
+
+        while a != None {
+            let val_a = (*a.unwrap().as_ptr()).val;
+            res.add(val_a);
+            a = (*a.unwrap().as_ptr()).next;
+        }
+
+        while b != None {
+            let val_b = (*b.unwrap().as_ptr()).val;
+            res.add(val_b);
+            b = (*b.unwrap().as_ptr()).next;
+        }
+
+        res
 	}
 }
 
