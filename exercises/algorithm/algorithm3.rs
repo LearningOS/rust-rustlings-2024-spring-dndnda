@@ -3,11 +3,22 @@
 	This problem requires you to implement a sorting algorithm
 	you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
-
-fn sort<T>(array: &mut [T]){
-	//TODO
+fn sort<T: Ord>(array: &mut [T]){
+	for i in 1..array.len() {
+        // 0 .. i-1 is all sorted.
+        let mut j = i;
+        while j > 0 && array[j-1] > array[j] {
+            array.swap(j, j-1);
+            j-=1;
+        }
+    }
 }
+
+// fn main() {
+//     let mut vec = vec![37, 73, 57, 75, 91, 19, 46, 64];
+//     sort(&mut vec);
+// }
+
 #[cfg(test)]
 mod tests {
     use super::*;

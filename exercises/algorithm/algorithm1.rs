@@ -2,11 +2,9 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
-
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
-use std::vec::*;
+//use std::vec::*;
 
 #[derive(Debug)]
 struct Node<T> {
@@ -70,34 +68,35 @@ impl<T> LinkedList<T> {
         }
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+    where T: std::cmp::PartialOrd + Copy,
 	{
-		let mut res: LinkedList<T>;
+		let mut res: LinkedList<T> = LinkedList::new();
         let mut a: Option<NonNull<Node<T>>> = list_a.start;
         let mut b = list_b.start;
 
         while a != None && b != None {
-            let val_a = (*a.unwrap().as_ptr()).val;
-            let val_b = (*b.unwrap().as_ptr()).val;
+            let val_a = unsafe{(*a.unwrap().as_ptr()).val};
+            let val_b = unsafe{(*b.unwrap().as_ptr()).val};
             if val_a < val_b {
                 res.add(val_a);
-                a = (*a.unwrap().as_ptr()).next;
+                a = unsafe{(*a.unwrap().as_ptr()).next};
             }
             else {
                 res.add(val_b);
-                b = (*b.unwrap().as_ptr()).next; 
+                b = unsafe{(*b.unwrap().as_ptr()).next}; 
             }
         }
 
         while a != None {
-            let val_a = (*a.unwrap().as_ptr()).val;
-            res.add(val_a);
-            a = (*a.unwrap().as_ptr()).next;
+            let val_a = unsafe{&(*a.unwrap().as_ptr()).val};
+            res.add(*val_a);
+            a = unsafe{(*a.unwrap().as_ptr()).next};
         }
 
         while b != None {
-            let val_b = (*b.unwrap().as_ptr()).val;
-            res.add(val_b);
-            b = (*b.unwrap().as_ptr()).next;
+            let val_b = unsafe{&(*b.unwrap().as_ptr()).val};
+            res.add(*val_b);
+            b = unsafe{(*b.unwrap().as_ptr()).next};
         }
 
         res

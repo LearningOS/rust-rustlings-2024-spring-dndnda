@@ -2,8 +2,6 @@
 	double linked list reverse
 	This problem requires you to reverse a doubly linked list
 */
-// I AM NOT DONE
-
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
 use std::vec::*;
@@ -73,8 +71,50 @@ impl<T> LinkedList<T> {
         }
     }
 	pub fn reverse(&mut self){
-		// TODO
+		// use recursion
+        // let end_new = Self::reverse_help(&self.start, self.length);
+        // self.start = self.end;
+        // self.end = *end_new;
+        if (self.length <= 1) {
+            return;
+        } 
+
+        let mut current = self.start.take();
+        while let Some(mut node_ptr) = current {
+            let next_ptr;
+            unsafe {
+                let node = node_ptr.as_mut();
+
+                if node.prev.is_none() {
+                    self.end = Some(node_ptr);
+                }
+
+                next_ptr = node.next.take();
+                node.next = node.prev;
+                node.prev = next_ptr;
+            }
+            current = next_ptr;
+            if current.is_none() {
+                self.start = Some(node_ptr);
+            }
+        }
 	}
+
+    // fn reverse_help<'a>(node: &'a Option<NonNull<Node<T>>>, len: u32) -> &'a Option<NonNull<Node<T>>> {
+    //     if len > 1 {
+    //         unsafe{
+    //         let next = &((*node.unwrap().as_ptr()).next);
+    //         let end = Self::reverse_help(next, len - 1);
+    //         (*end.unwrap().as_ptr()).next = *node;
+    //         (*node.unwrap().as_ptr()).prev = *end;
+    //         (*node.unwrap().as_ptr()).next = None;
+    //         return end;
+    //         }
+    //     }
+    //     else {
+    //         return node;
+    //     }
+    // }
 }
 
 impl<T> Display for LinkedList<T>
@@ -155,5 +195,10 @@ mod tests {
 		for i in 0..original_vec.len(){
 			assert_eq!(reverse_vec[i],*list.get(i as i32).unwrap());
 		}
+
+        unsafe{
+            assert_eq!((*list.end.unwrap().as_ptr()).val, 34);
+            assert_eq!((*list.start.unwrap().as_ptr()).val, 45);
+        }
 	}
 }

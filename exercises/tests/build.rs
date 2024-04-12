@@ -11,7 +11,7 @@ fn main() {
         .unwrap()
         .as_secs(); // What's the use of this timestamp here?
     let your_command = format!(
-       "rustc-env=TEST_FOO={}", timestamp + 1
+       "rustc-env=TEST_FOO={}", timestamp -10
     );
     println!("cargo:{}", your_command);
 
